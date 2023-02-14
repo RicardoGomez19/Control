@@ -32,11 +32,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <body class="hold-transition sidebar-mini">
   <div class="wrapper">
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" data-widget="pushmenu" href="" role="button"><i class="fas fa-bars"></i></a>
-        </li>
-      </ul>
+
       <div class="container">
         <a class="navbar-brand" href="{{ url('/') }}">
           {{ config('app.name', 'Laravel') }}
@@ -82,6 +78,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </div>
             </li>
             @endguest
+          </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" data-widget="pushmenu" href="" role="button"><i class="fas fa-bars"></i></a>
+            </li>
           </ul>
         </div>
       </div>

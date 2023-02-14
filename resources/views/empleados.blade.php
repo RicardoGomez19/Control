@@ -1,14 +1,14 @@
-@extends('layouts.masterProveedor')
-@section('titulo','Proveedores')
+@extends('layouts.masterEmple')
+@section('titulo','Empleados')
 @section('contenido')
 
 <!-- inicia vue -->
-<div id="proveedor">
+<div id="empleado">
     <div class="row">
         <div class="col-md-12">
             <div class="card card-gray">
                 <div class="card-header">
-                    <h4 class="text-center">PROVEEDORES
+                    <h4 class="text-center">EMPLEADOS
                         <span class="float-right" @click="mostrarModal()">
                             <div class="btn btn-block" id="add">
                                 <i class="fa fa-plus-circle fa-lg" aria-hidden="true">Add</i>
@@ -25,7 +25,7 @@
                 <div class="card-header">
 
                     <div class="col-md-4">
-                        <input type="text" placeholder="Escriba el nombre del propietario" class="form-control text-center" v-model="buscar">
+                        <input type="text" placeholder="Escriba el nombre del empleado" class="form-control text-center" v-model="buscar">
                     </div>
                 </div>
 
@@ -40,30 +40,31 @@
                             <th>CIUDAD</th>
                             <th>DIRECCION</th>
                             <th>TELEFONO</th>
-                            <th>CORREO</th>
+                            <th>NSS</th>
                             <th hidden="">STATUS</th>
                             <th>ACCIONES</th>
 
                         </thead>
 
                         <tbody>
-                            <tr v-for="(proveedor, i) in paginar" :key="i">
-                                <td>@{{i + 1}}</td>
-                                <td>@{{proveedor.nombre}}</td>
-                                <td>@{{proveedor.apellidos}}</td>
-                                <td>@{{proveedor.localidad}}</td>
-                                <td>@{{proveedor.direccion}}</td>
-                                <td>@{{proveedor.telefono}}</td>
-                                <td>@{{proveedor.correo}}</td>
-                                <td hidden="">@{{ proveedor ? "Activo" : "Inactivo" }}</td>
+                            <tr v-for="empleado in empleados">
+                                <td>@{{empleado.n_empleado}}</td>
+                                <td>@{{empleado.nombres}}</td>
+                                <td>@{{empleado.apellidos}}</td>
+                                <td>@{{empleado.ciudad}}</td>
+                                <td>@{{empleado.direccion}}</td>
+                                <td>@{{empleado.telefono}}</td>
+                                <td>@{{empleado.nss}}</td>
+
+                                <td hidden="">@{{ empleado ? "Activo" : "Inactivo" }}</td>
 
 
                                 <td>
-                                    <button id="edit" class="btn btn-sm" @click="editandoProveedor(proveedor.id_proveedor)">
+                                    <button id="edit" class="btn btn-sm" @click="editandoProveedor(empleado.id_empleado)">
                                         <i class="fas fa-pen">edit</i>
                                     </button>
 
-                                    <button id="delete" class="btn btn-sm" @click="eliminarProveedor(proveedor.id_proveedor)">
+                                    <button id="delete" class="btn btn-sm" @click="eliminarProveedor(empleado.id_empleado)">
                                         <i class="fas fa-trash">delete</i>
                                     </button>
                                 </td>
@@ -72,23 +73,14 @@
                     </table>
                     <!--fin de tabla-->
                 </div>
-                <!--inicio paginacion-->
-                <div class="w-33">
-                    <div class="center">
-                        <button type="button" id="btn" class="btn" @click="anteriorPagina">
-                            << </button>
-                                <button type="button" id="btn" class="btn" v-for="num in numeroDePaginas" :key="num" @click="seccionarPagina(num)">@{{num}}</button>
-                                <button type="button" id="btn" class="btn" @click="siguientePagina"> >> </button>
-                    </div>
-                </div>
-                <!--final paginacion-->
+                
 
             </div>
             <!--fin de col-md-12-->
         </div>
 
         <!--inicio ventana Modal -->
-        <div class="modal fade" id="modalProveedor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="modalEmpleado" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content" id="colorModal">
                     <div class="modal-header">
@@ -100,17 +92,17 @@
                     </div>
                     <div class="modal-body">
                         <h6>Nombre:</h6>
-                        <input type="text" class="form-control" placeholder="Nombre del proveedor" v-model="nombre" required>
+                        <input type="text" class="form-control" placeholder="Nombre del proveedor" v-model="nombres" required>
                         <h6>Apellidos:</h6>
                         <input type="text" class="form-control" placeholder="Apellidos del proveedor" v-model="apellidos" required>
-                        <h6>Localidad:</h6>
-                        <input type="text" class="form-control" placeholder="Escriba la localidad" v-model="localidad">
+                        <h6>Ciudad:</h6>
+                        <input type="text" class="form-control" placeholder="Escriba la localidad" v-model="ciudad">
                         <h6>Direccion:</h6>
                         <input type="text" class="form-control" placeholder="Escriba la dirección" v-model="direccion">
                         <h6>Telefono:</h6>
                         <input type="number" class="form-control" placeholder=" Escriba el télefono" v-model="telefono">
-                        <h6>Correo:</h6>
-                        <input type="text" class="form-control" placeholder=" Escriba el correo" v-model="correo">
+                        <h6>Nss:</h6>
+                        <input type="text" class="form-control" placeholder=" Escriba el correo" v-model="nss">
 
                     </div>
                     <div class="modal-footer">
@@ -125,13 +117,13 @@
 
     </div>
 </div>
-    <!-- termina vue-->
-    @endsection
+<!-- termina vue-->
+@endsection
 
-    @push('scripts')
-    <script type="text/javascript" src="js/vue-resource.js"></script>
-    <script type="text/javascript" src="js/apis/apiProveedor.js"></script>
-    @endpush
+@push('scripts')
+<script type="text/javascript" src="js/vue-resource.js"></script>
+<script type="text/javascript" src="js/apis/apiProveedor.js"></script>
+@endpush
 
-    <input type="hidden" name="route" value="{{url('/')}}">
-    <link type="text/css" rel="stylesheet" href="css/estilo.css">
+<input type="hidden" name="route" value="{{url('/')}}">
+<link type="text/css" rel="stylesheet" href="css/estilo.css">

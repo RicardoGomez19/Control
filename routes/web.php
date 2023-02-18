@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EmpleadosController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,5 +21,32 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::group(
+    ['middleware' => ['auth', 'verified']],
+    function () {
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/empleados', [App\Http\Controllers\ProveedorController::class, 'index'])->name('empleados');
+//Route::get('/empleados', [App\Http\Controllers\EmpleadosController::class, 'index'])->name('empleados');
+
+ Route::get('/empleados', function () {
+     return view('sistema.vistas.empleados.empleados');
+ });
+
+Route::get('/entradas', function () {
+     return view('sistema.vistas.entradas.entradas');
+});
+
+Route::get('/salidas', function () {
+    return view('sistema.vistas.salidas.salidas');
+});
+
+Route::get('/reporte', function () {
+    return view('sistema.vistas.reportes.reporte2');
+});
+
+Route::get('/pagos', function () {
+    return view('sistema.vistas.pagos.pagos');
+});
+
+
+});
+

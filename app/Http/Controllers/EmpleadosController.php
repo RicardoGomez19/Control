@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Empleados;
+use Illuminate\Http\Request;
+
 
 class EmpleadosController extends Controller
 {
@@ -14,10 +15,11 @@ class EmpleadosController extends Controller
      */
     public function index()
     {
+        $empleados = Empleados::where('activo', '1')->get();
         //
         return[
             "ok" => true,
-            "data" => Empleados::where('activo', '1')->get()
+            "data" => $empleados,
            ];
     }
 
@@ -86,4 +88,9 @@ class EmpleadosController extends Controller
     {
         //
     }
+
+
+  //  public function index2(){
+//     return view('sistema.vistas.escritorio.escritorio');
+//   }
 }

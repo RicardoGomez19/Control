@@ -1,10 +1,10 @@
-import HomeViewVue from "@/views/HomeView.vue";
+import CheckView from "@/views/CheckView.vue";
 import type { RouteRecordRaw } from "vue-router";
 
 export const EmployeeLayoutChildrens: RouteRecordRaw[] = [
     {
         path: '',
-        name: "Home",
-        component: HomeViewVue
-    }
+        name: "Check",
+        component: CheckView,
+    },
 ]

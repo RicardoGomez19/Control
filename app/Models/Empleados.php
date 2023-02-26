@@ -20,9 +20,11 @@ class Empleados extends Model
     //tabla
     protected $fillable = [
         'id_empleado',
+        'n_empleado',
         'nombres',
         'apellidos',
         'ciudad',
+        'direccion',
         'telefono',
         'nss',
         'activo'

@@ -18,7 +18,7 @@
 
     <!-- Simple Tables -->
     <div class="row">
-        <empleado></empleado>
+        <tabla-component></tabla-component>
     </div>
 </div>
 {{-- </div> --}}

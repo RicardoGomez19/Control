@@ -10,14 +10,10 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>Control de asistencias</title>
   <link href="{{asset('plantilla/img/logo/logo.png')}}" rel="icon">
-  <link href="{{ asset('css/app.css') }}" rel="stylesheet">
   <link href="{{asset('plantilla/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
   <link href="{{asset('plantilla/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css">
   <link href="{{asset('plantilla/css/ruang-admin.min.css')}}" rel="stylesheet">
-
-  <script src="{{asset('js/vue.js')}}" type="text/javascript"></script>
-
-
+  @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
 
@@ -59,7 +55,6 @@
     </a>
 
   </div>
-  <script src="{{ asset('js/app.js') }}"></script>
   <script src="{{asset('plantilla/vendor/jquery/jquery.min.js')}}"></script>
   <script src="{{asset('plantilla/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
   <script src="{{asset('plantilla/vendor/jquery-easing/jquery.easing.min.js')}}"></script>

@@ -18,6 +18,14 @@ const app = createApp({});
 import ExampleComponent from './components/ExampleComponent.vue';
 app.component('example-component', ExampleComponent);
 
+import TablaComponent from './modules/Empleados/components/Table.vue';
+app.component('tabla-component', TablaComponent);
+
+import EntradasComponent from './modules/Entradas/components/entradas.vue';
+app.component('entradas-component', EntradasComponent);
+
+import SalidasComponent from './modules/Salidas/components/salidas.vue';
+app.component('salidas-component', SalidasComponent);
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

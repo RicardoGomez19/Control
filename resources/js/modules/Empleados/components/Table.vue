@@ -78,56 +78,6 @@
               </div>
           </div>
           <!--final de modal-->
-      
-      <!-- Modal detalles-->
-      <div class="modal fade" id="detalles" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Detalles del cliente</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="salirDetalles">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <div>
-                <div class="col-12">
-                  <table class="table table-striped">
-                      <tbody>
-                        <tr>
-                          <th>Nombres: {{ nombres }}</th> 
-                        </tr>
-                        <tr>
-                          <th>Apellidos: {{ apellidos }}</th>
-                        </tr>
-                        <tr>
-                          <th>Telefono: {{ telefono }}</th>
-                        </tr>
-                        <tr>
-                          <th>Ciudad: {{ ciudad }}</th>
-                        </tr>
-                        <tr>
-                          <th>Direccion: {{ direccion }}</th>
-                        </tr>
-                        <tr>
-                          <th>NSS: {{ nss }}</th>
-                        </tr>
-                        <tr>
-                          <th>Activo: {{ activo }}</th>
-                        </tr>
-                      </tbody>
-                    </table>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-outline-danger" data-dismiss="modal" @click="salirEditar()">Salir</button>
-              <button type="button" class="btn btn-primary" @click="editEmpleado(arrayDetalleEmpleado)">Editar</button>
-            </div>
-          </div>
-        </div>
-      </div>
        <prueba></prueba>  
 </template>
 
@@ -195,7 +145,7 @@ export default {
     },
 
     guardarEmpleado: function () {
-
+      let url = '/apiEmpleado';
       // se construye el json para enviar al controlador
       var empleado = {
         nombres: this.nombres,
@@ -217,11 +167,10 @@ export default {
         swal("Por favor", "Rellene todos los campos del formulario", "warning");
         return
       };
-      console.log("aca")
       //se envia los datos del json al controlador
-      axios.post(Apicontrol + '/apiEmpleado/' + empleado).then(function (j) {
+      axios.post(url, empleado).then(function (j) {
         this.getEmpleados();
-        consolo.log("poraca")
+
         swal("Buen trabajo", "El empleado se ha agregado exitosamente!", "success");
         this.nombres = '';
         this.apellidos = '';
@@ -232,18 +181,15 @@ export default {
         this.activo = '1';
 
       }).catch(function (j) {
-        console.log("agregar")
         swal("Ese empleado ya existe", "Intente con otro.", "error");
       });
 
 
       $('#modalEmpleado').modal('hide');
 
-        console.log("por esos");
-
     },
     
-    eliminarEmpleado: function (id) {
+    eliminarEmpleado: function(id) {
       swal("Esta seguro de eliminar al empleado?", {
         buttons: {
           cancel: "Cancelar",
@@ -253,10 +199,10 @@ export default {
           },
 
         },
-      }).then(async value => {
+      }).then( async value => {
         switch (value) {
           case "json":
-            const { data } = await axios.delete(Apicontrol + '/apiEmpleado', data.id_empleado).then(function (json) {
+            const { data } = await axios.delete(Apicontrol + '/apiEmpleado', data.data.id_empleado).then(function (json) {
               swal("Buen trabajo", "Se ha eliminado exitosamente!", "success");
               this.getEmpleados();
             }).catch(function (json) {

@@ -9,7 +9,7 @@
                         <input type="text" class="form-control" placeholder="Texto a buscar" v-model="buscar" 
                        >
                         <button type="button"  class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
-                        <button class="btn btn-info">Nuevo</button>
+                        <button class="btn btn-info" @click="mostrarModal(empleado)">Nuevo</button>
                     </div>
                 </div>
             </div>
@@ -36,70 +36,48 @@
         <td>{{ empleado.direccion }}</td>
         <td>{{ empleado.nss }}</td>
         <td>
-        <button id="button" @click="editarEmpleado(empleado)"><span class="fas fa-pen"></span></button>
-        <button><span class="fas fa-trash"></span></button>    
+        <button id="button"  @click="editandoEmpleado(empleado)"><span class="fas fa-pen"></span></button>
+        <button><span class="fas fa-trash"  @click="eliminarEmpleado(empleado)"></span></button>    
          
         </td>
       </tr>
     </tbody>
   </table>
   <!-- Modal detalles-->
-      <div  v-if="form == 1">
-     
-          <div class="card mb-3">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-              <h6 class="m-0 font-weight-bold text-primary" v-if="bandera == 1">Nuevo cliente</h6>
-              <h6 class="m-0 font-weight-bold text-primary" v-if="bandera == 2">Editar cliente</h6>
-            </div>
-              <center><p style="color:red" v-show="error" v-for="error in arrayError" :key="error"></p></center>
-            <div class="card-body">
-          
-                <div class="form-row">
-                  <div class="col">
-                    <label for="exampleInputPassword1">Nombres</label>
-                    <input type="text" class="form-control" placeholder="Nombres" v-model="nombres">
-                  
+      <!--inicio ventana Modal -->
+          <div class="modal fade" id="modalEmpleado" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content" id="colorModal">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel" v-if="agregando == true">AGREGANDO EMPLEADO</h5>
+                          <h5 class="modal-title" id="exampleModalLabel" v-if="agregando == false">EDITANDO EMPLEADO</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+                      <div class="modal-body">
+                          <h6>Nombres:</h6>
+                            <input type="text" class="form-control" placeholder="Nombre del empleado" v-model="nombres" required>
+                          <h6>Apellidos:</h6>
+                            <input type="text" class="form-control" placeholder="Apellidos del empleado" v-model="apellidos" required>
+                          <h6>Telefono:</h6>
+                            <input type="number" class="form-control" placeholder=" Escriba el télefono" v-model="telefono">
+                          <h6>Ciudad:</h6>
+                            <input type="text" class="form-control" placeholder="Escriba la ciudad" v-model="ciudad">
+                          <h6>Direccion:</h6>
+                            <input type="text" class="form-control" placeholder="Escriba la dirección" v-model="direccion">
+                          <h6>Nss:</h6>
+                            <input type="text" class="form-control" placeholder=" Escriba el correo" v-model="nss">
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                          <button type="button" class="btn btn-info" @click="guardarEmpleado" v-if="agregando == true">Guardar</button>
+                          <button type="button" class="btn btn-info" @click="actualizarEmpleado" v-if="agregando == false">Guardar</button>
+                      </div>
                   </div>
-                  <div class="col">
-                    <label for="exampleInputPassword1">Apellidos</label>
-                    <input type="text" class="form-control" placeholder="Apellidos" v-model="apellidos">
-                  
-                  </div>
-                </div>
-
-                <div class="form-row">
-                  <div class="col">
-                    <label for="exampleInputPassword1">Telefono</label>
-                    <input type="text" class="form-control" maxlength="10" placeholder="- - - - - - - - - -" v-model="telefono">
-                 
-                  </div>
-                  <div class="col">
-                    <label for="exampleInputPassword1">Ciudad</label>
-                    <input type="email" class="form-control" placeholder="ciudad" v-model="ciudad">
-                  </div>
-                </div>
-
-                <div class="form-row">
-                  <div class="col">
-                    <label for="exampleInputPassword1">Direccion</label>
-                    <input type="text" class="form-control" placeholder="Direccion" v-model="direccion">
-                  </div>
-                  <div class="col">
-                    <label for="exampleInputPassword1">Nss</label>
-                    <input type="email" class="form-control" placeholder="Nss" v-model="nss">
-                  </div>
-                </div>
-
-
-                <hr>
-                <button class="btn btn-danger" @click="cancelar()">Cancelar</button>
-
-                <button class="btn btn-primary" @click="storeEmpleado()" v-if="bandera == 1">Registrar</button>
-                <button class="btn btn-primary"  v-if="bandera == 2" @click="updateEmpleado()">Actualizar</button>
-
-            </div>
+              </div>
           </div>
-      </div>
+          <!--final de modal-->
       
       <!-- Modal detalles-->
       <div class="modal fade" id="detalles" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -163,17 +141,23 @@ export default {
   },
   data() {
     return {
+      
       empleados: [],
-      arrayDetalleEmpleado: [],
       id_empleado: '',
       n_empleado:'',
       nombres:'',
       apellidos: '',
-      ciudad: '',
       telefono: '',
+      ciudad: '',
       direccion: '',
       nss: '',
-      activo: 1,
+      activo: '1',
+      agregando: true,
+      buscar: '',
+      // variables de paginacion
+      paginaActual: 1,
+      mostrarPorPagina: 7,
+      // fin variables de paginacion
     }
   },
 
@@ -181,185 +165,168 @@ export default {
     this.getEmpleados()
   },
   methods: {
+
     async getEmpleados() {
-      const { data }  = await Apicontrol.get('/apiEmpleado')
-      this.empleados = data.data;
+      try {
+        const { data } = await Apicontrol.get('/apiEmpleado');
+        this.empleados = data.data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    // async getEmpleados() {
+    //   const { data }  = await Apicontrol.get('/apiEmpleado')
+    //   this.empleados = data.data;
       
+    // },
+
+    mostrarModal: function () {
+      this.agregando = true;
+      this.nombres = '';
+      this.apellidos = '';
+      this.telefono = '';
+      this.ciudad = '';
+      this.direccion = ''; 
+      this.nss = '';
+      this.activo = '1';
+
+
+      $('#modalEmpleado').modal('show');
     },
-    createEmpleado() {
-      const e = this;
-      e.table = 0;
-      e.form = 1;
-      e.bandera = 1;
-    },
-    validarInputs() {
-      this.error = 0;
-      this.arrayError = [];
 
-      if (!this.nombres) this.arrayError.push('los nombres son requeridos');
-      if (!this.apellidos) this.arrayError.push('los apellidos son requeridos');
-      if (!this.telefono) this.arrayError.push('El telefono es requeridos');
+    guardarEmpleado: function () {
 
-      if (this.arrayError.length) this.error = 1;
+      // se construye el json para enviar al controlador
+      var empleado = {
+        nombres: this.nombres,
+        apellidos: this.apellidos,
+        telefono: this.telefono,
+        ciudad: this.ciudad,
+        direccion: this.direccion,
+        nss: this.nss,
+        activo: this.activo
 
-      return this.error;
-      //console.log(this.arrayError)
+      };
+      if (
+        !empleado.nombres ||
+        !empleado.apellidos ||
+        !empleado.telefono ||
+        !empleado.direccion ||
+        !empleado.ciudad ||
+        !empleado.nss) {
+        swal("Por favor", "Rellene todos los campos del formulario", "warning");
+        return
+      };
+      console.log("aca")
+      //se envia los datos del json al controlador
+      axios.post(Apicontrol + '/apiEmpleado/' + empleado).then(function (j) {
+        this.getEmpleados();
+        consolo.log("poraca")
+        swal("Buen trabajo", "El empleado se ha agregado exitosamente!", "success");
+        this.nombres = '';
+        this.apellidos = '';
+        this.ciudad = '';
+        this.direccion = '';
+        this.telefono = '';
+        this.nss = '';
+        this.activo = '1';
+
+      }).catch(function (j) {
+        console.log("agregar")
+        swal("Ese empleado ya existe", "Intente con otro.", "error");
+      });
+
+
+      $('#modalEmpleado').modal('hide');
+
+        console.log("por esos");
 
     },
     
-    storeEmpleado() {
-      if (this.validarInputs()) {
-        return;
-      }
+    eliminarEmpleado: function (id) {
+      swal("Esta seguro de eliminar al empleado?", {
+        buttons: {
+          cancel: "Cancelar",
+          catch: {
+            text: "Aceptar",
+            value: "json",
+          },
 
-      let e = this;
-      let url = '/apiEmpleado';
-      var arrayEmpleado = {
-        'nombres': this.nombres,
-        'apellidos': this.apellidos,
-        'telefono': this.telefono,
-        'email': this.email,
-        'nacionalidad': this.nacionalidad,
-        'pais': this.pais,
-        'ciudad': this.ciudad
-      };
-      axios.post(url, arrayEmpleado).then(function (response) {
-        // handle success
-        e.nombres = "";
-        e.apellidos = "";
-        e.telefono = "";
-        e.email = "";
-        e.nacionalidad = "";
-        e.pais = "";
-        e.ciudad = "";
-        e.form = 0;
-        e.table = 1;
-        e.getEmpleados(1, e.criterio, '');
+        },
+      }).then(async value => {
+        switch (value) {
+          case "json":
+            const { data } = await axios.delete(Apicontrol + '/apiEmpleado', data.id_empleado).then(function (json) {
+              swal("Buen trabajo", "Se ha eliminado exitosamente!", "success");
+              this.getEmpleados();
+            }).catch(function (json) {
 
+            });
+            break;
+          default: ;
+
+        }
       })
-        .catch(function (error) {
-          // handle error
-          console.log(error);
-        });
-
     },
-     cancelar() {
-      const e = this;
-      e.table = 1;
-      e.form = 0;
-      e.bandera = 1;
-      e.nombres = "";
-      e.apellidos = "";
-      e.telefono = "";
-      e.email = "";
-      e.nacionalidad = "";
-      e.pais = "";
-      e.ciudad = "";
-      e.arrayError = [];
-    },
-    DetallesEmpleado(data = []) {
-      this.arrayDetalleEmpleados = data;
-      this.nombres = data['nombres'];
-      this.apellidos = data['apellidos'];
-      this.telefono = data['telefono'];
-      this.ciudad = data['ciudad'];
-      this.direccion = data['direccion'];
-      this.nss = data['nss'];
-      this.activo = data['activo'];
-      $("#detalles").modal('show');
-    },
+     
+    // DetallesEmpleado(data = []) {
+    //   this.arrayDetalleEmpleados = data;
+    //   this.nombres = data['nombres'];
+    //   this.apellidos = data['apellidos'];
+    //   this.telefono = data['telefono'];
+    //   this.ciudad = data['ciudad'];
+    //   this.direccion = data['direccion'];
+    //   this.nss = data['nss'];
+    //   this.activo = data['activo'];
+    //   $("#detalles").modal('show');
+    // },
 
-     salirEditar() {
-      const e = this;
-      e.nombres = "";
-      e.apellidos = "";
-      e.telefono = "";
-      e.ciudad = "";
-      e.direccion = "";
-      e.nss = "";
-      e.activo = "";
-      $("#detalles").modal('hide');
-    },
+    //  salirEditar() {
+    //   const e = this;
+    //   e.nombres = "";
+    //   e.apellidos = "";
+    //   e.telefono = "";
+    //   e.ciudad = "";
+    //   e.direccion = "";
+    //   e.nss = "";
+    //   e.activo = "";
+    //   $("#detalles").modal('hide');
+    // },
 
-
-   
-    updateEmpleado() {
-      if (this.validarInputs()) {
-        return;
-      }
-
-      let e = this;
-      let url = '/apiEmpleado';
-      var arrayCliente = {
-        'nombres': this.nombres,
-        'apellidos': this.apellidos,
-        'telefono': this.telefono,
-        'email': this.email,
-        'nacionalidad': this.nacionalidad,
-        'pais': this.pais,
-        'ciudad': this.ciudad,
-        'id_empleado': this.id_empleado
-      };
-      axios.put(url, arrayEmpleado).then(function (response) {
-        // handle success
-        e.id_empleado = 0;
-        e.nombres = "";
-        e.apellidos = "";
-        e.telefono = "";
-        e.email = "";
-        e.nacionalidad = "";
-        e.pais = "";
-        e.ciudad = "";
-        e.form = 0;
-        e.table = 1;
-        e.getEmpleados(1, e.criterio, '');
-
-      })
-        .catch(function (error) {
-          // handle error
-          console.log(error);
-        });
-    },
-    
-    editarEmpleado(data = []) {
+     editandoEmpleado(data = []) {
       this.agregando = false;
-      $('#detalles').modal('show');
-      this.nombres = data['nombres'];
-      this.apellidos = data['apellidos'];
-      this.ciudad = data['ciudad'];
-      this.direccion = data['direccion'];
-      this.telefono = data['telefono'];
-      this.nss = data['nss'];
-      console.log(data['nombres']);
+       {
+         this.nombres = data['nombres'];
+         this.apellidos = data['apellidos'];
+         this.telefono = data['telefono'];
+         this.ciudad = data['ciudad'];
+        this.direccion = data['direccion'];
+        this.nss = data['nss'];
+      }
+      $('#modalEmpleado').modal('show');
+       console.log(data);
     },
 
     actualizarEmpleado: function () {
 
-      var jsonProveedor = {
-        nombre: this.nombre,
+      var jsonEmpleado = {
+        nombres: this.nombres,
         apellidos: this.apellidos,
-        localidad: this.localidad,
+        ciudad: this.ciudad,
         direccion: this.direccion,
         telefono: this.telefono,
-        correo: this.correo
+        nss: this.nss
       };
-      if (
-        !jsonProveedor.nombre ||
-        !jsonProveedor.apellidos ||
-        !jsonProveedor.localidad ||
-        !jsonProveedor.direccion ||
-        !jsonProveedor.telefono ||
-        !jsonProveedor.correo) {
-        swal("Por favor", "Rellene todos los campos del formulario", "warning");
-        return
-      };
-      axios.get(url).then(function (json) {
-        this.obtenerProveedores();
-        swal("Buen trabajo", "Se ha actualizado exitosamente el proveedor!", "success");
+      console.log(jsonEmpleado);
+      
+      axios.patch(Apicontrol + '/apiEmpleado/' + this.id_empleado, jsonEmpleado).then(function (json) {
+        this.getEmpleados();
+        swal("Buen trabajo", "Se ha actualizado exitosamente el empleado!", "success");
       });
 
-      $('#modalProveedor').modal('hide');
+      $('#modalEmpleado').modal('hide');
     },
+
 
   }
 }

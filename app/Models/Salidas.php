@@ -21,7 +21,7 @@ class Salidas extends Model
  
      //tabla
      protected $fillable = [
-         'id_salida',
+        'id_salida',
         'id_entrada',
         'fecha_format',
         'hora_format',
